@@ -25,7 +25,7 @@ async function httpAddNewLaunch(req, res) {
 
   launch.launchDate = new Date(launch.launchDate);
   if (!Number(launch.launchDate)) {
-    res.send(400).json({
+    return res.status(400).json({
       error: 'Invalid launch date',
     });
   }
@@ -33,19 +33,28 @@ async function httpAddNewLaunch(req, res) {
   return res.status(201).json(launch);
 }
 
-function httpAbortLaunch(req, res) {
+async function httpAbortLaunch(req, res) {
   const launchId = Number(req.params.id);
+  const existsLaunch = await existsLaunchWithId(launchId);
 
   // If launch doesn't exist
-  if (!existsLaunchWithId(launchId)) {
+  if (!existsLaunch) {
     return res.status(404).json({
       error: 'Launch not dound',
     });
   }
 
   // If launch does exist
-  const aborted = abortLaunchById(launchId);
-  return res.status(200).json(aborted);
+  const aborted = await abortLaunchById(launchId);
+
+  if (!aborted) {
+    return res.status(400).json({
+      error: 'Launch not aborted.',
+    });
+  }
+  return res.status(200).json({
+    ok: true,
+  });
 }
 
 module.exports = {
