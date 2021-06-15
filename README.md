@@ -4,6 +4,10 @@ App provides launch data on previous SpaceX flights and allows users to schedule
 
 ## Run Locally
 
+Frontend runs on port 8000 - must run `Client` or `Watch` command
+
+`http://localhost:8000/`
+
 Clone the project
 
 ```bash
